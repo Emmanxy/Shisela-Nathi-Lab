@@ -2,130 +2,364 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Welders Lab</title>
+    <title>Shisela Nathi Lab</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style1.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="overlay"></div>
+<div class="bg-grid"></div>
+<div class="bg-glow glow-1"></div>
+<div class="bg-glow glow-2"></div>
 
-<div class="container">
+<div class="page-wrapper">
 
-    <!-- LEFT: PROJECT INPUT -->
-    <div class="left">
-        <h2>Shisela Nathi Lab</h2>
-
-        <textarea id="description" placeholder="Describe your project (e.g. bedroom window frame, gate)..."></textarea>
-
-        <input id="length" type="number" placeholder="Length (m)">
-        <input id="width" type="number" placeholder="Width (m)">
-        <input id="quantity" type="number" placeholder="Quantity">
-
-        <select id="material">
-            <option>Steel</option>
-            <option>Aluminum</option>
-            <option>Stainless Steel</option>
-        </select>
-
-        <select id="shape">
-            <option>Flat Bar</option>
-            <option>Square Tube</option>
-            <option>Round Pipe</option>
-            <option>Angle Iron</option>
-        </select>
-
-        <input id="thickness" type="number" placeholder="Thickness (mm)">
-
-        <button onclick="generateFullPlan()">Generate Full Plan</button>
-    </div>
-
-    <!-- RIGHT: RESULTS -->
-    <div class="right">
-        <h2>Results</h2>
-
-        <div class="result">
-
-            <h4>⏱️ Estimated Time</h4>
-            <p id="time">--</p>
-
-            <h4>💰 Cost</h4>
-            <p id="materialNeeded">Material: --</p>
-            <p id="priceMeter">Price/m: R --</p>
-            <p id="totalCost">Total: R --</p>
-
-            <h4>🛠️ Steps</h4>
-            <ul id="steps"></ul>
-
-            <h4>⚠️ Safety</h4>
-            <ul id="safety"></ul>
-
-            <h4>🎨 Alternative Designs</h4>
-            <ul id="alternatives"></ul>
-
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-brand">
+            <div class="brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <span class="brand-name">Shisela Nathi <span>Lab</span></span>
         </div>
-    </div>
+        <div class="header-right">
+            <div class="header-tag">Welding Project Planner</div>
+            <div class="user-pill">
+                <div class="user-avatar">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </div>
+                <span class="user-name">{{ session.get('username', 'Welder') }}</span>
+                <a href="/auth/logout" class="logout-btn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16 17 21 12 16 7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                    Sign out
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <main class="main-layout">
+
+        <!-- LEFT PANEL: INPUTS -->
+        <section class="panel panel-input">
+            <div class="panel-header">
+                <p class="panel-label">01 — Project Setup</p>
+                <h2>Configure<br>Your Build</h2>
+            </div>
+
+            <!-- PROJECT DESCRIPTION -->
+            <div class="field-group full" style="margin-bottom:18px;">
+                <label>Project Description</label>
+                <textarea id="description" placeholder="e.g. bedroom window frame, security gate, staircase railing..."></textarea>
+            </div>
+
+            <!-- METAL ITEMS LIST -->
+            <div class="items-header">
+                <label>Metal Items</label>
+                <span class="item-count" id="itemCount">1 item</span>
+            </div>
+
+            <div id="metalItemsList">
+                <!-- Items injected by JS -->
+            </div>
+
+            <button class="add-item-btn" onclick="addMetalItem()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Add Another Metal
+            </button>
+
+            <button class="generate-btn" onclick="generateFullPlan()">
+                <span class="btn-text">Estimate All Items</span>
+                <span class="btn-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </span>
+            </button>
+        </section>
+
+        <!-- RIGHT PANEL: RESULTS -->
+        <section class="panel panel-results" id="resultsPanel">
+
+            <!-- EMPTY STATE -->
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+                    </svg>
+                </div>
+                <p>Add your metal items and hit <strong>Estimate All Items</strong> to see the full breakdown.</p>
+            </div>
+
+            <!-- RESULTS CONTENT -->
+            <div class="results-content hidden" id="resultsContent">
+
+                <div class="panel-header">
+                    <p class="panel-label">02 — Output</p>
+                    <h2>Cost<br>Breakdown</h2>
+                </div>
+
+                <!-- GRAND TOTAL BANNER -->
+                <div class="grand-total-banner">
+                    <div class="gt-left">
+                        <span class="gt-label">Grand Total</span>
+                        <span class="gt-value" id="grandTotal">R 0.00</span>
+                    </div>
+                    <div class="gt-right">
+                        <div class="gt-stat">
+                            <span class="gt-stat-label">Total Time</span>
+                            <span class="gt-stat-val" id="totalTime">--</span>
+                        </div>
+                        <div class="gt-stat">
+                            <span class="gt-stat-label">Items</span>
+                            <span class="gt-stat-val" id="totalItems">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PER-ITEM RESULTS -->
+                <div id="itemResults"></div>
+
+                <!-- SAFETY & STEPS -->
+                <div class="result-section">
+                    <div class="section-header">
+                        <div class="section-dot"></div>
+                        <h4>Build Steps</h4>
+                    </div>
+                    <ol class="steps-list" id="steps"></ol>
+                </div>
+
+                <div class="result-section">
+                    <div class="section-header">
+                        <div class="section-dot warning"></div>
+                        <h4>Safety Notes</h4>
+                    </div>
+                    <ul class="safety-list" id="safety"></ul>
+                </div>
+
+                <div class="result-section">
+                    <div class="section-header">
+                        <div class="section-dot alt"></div>
+                        <h4>Alternative Designs</h4>
+                    </div>
+                    <ul class="alt-list" id="alternatives"></ul>
+                </div>
+
+            </div>
+
+            <!-- LOADER -->
+            <div class="loader hidden" id="loader">
+                <div class="loader-ring"></div>
+                <p>Calculating estimates...</p>
+            </div>
+
+        </section>
+
+    </main>
 
 </div>
 
 <script>
-async function generateFullPlan() {
+// ── DATA ──────────────────────────────────────────────
+const MATERIALS = ["Steel", "Aluminum", "Stainless Steel"];
+const SHAPES    = ["Flat Bar", "Square Tube", "Round Pipe", "Angle Iron"];
+let itemCounter = 0;
 
-    // Collect inputs
-    const data = {
-        description: document.getElementById("description").value,
-        length: document.getElementById("length").value,
-        width: document.getElementById("width").value,
-        quantity: document.getElementById("quantity").value,
-        material: document.getElementById("material").value,
-        shape: document.getElementById("shape").value,
-        thickness: document.getElementById("thickness").value
-    };
+// ── INIT ──────────────────────────────────────────────
+addMetalItem(); // Start with one item
+
+// ── ADD ITEM ──────────────────────────────────────────
+function addMetalItem() {
+    itemCounter++;
+    const id = itemCounter;
+    const list = document.getElementById("metalItemsList");
+
+    const card = document.createElement("div");
+    card.className = "metal-item-card";
+    card.id = `item-${id}`;
+    card.style.animationDelay = "0s";
+
+    card.innerHTML = `
+        <div class="item-card-header">
+            <div class="item-badge">Item ${String(id).padStart(2,'0')}</div>
+            <div class="item-label">Metal Item #${id}</div>
+            ${id > 1 ? `<button class="remove-btn" onclick="removeItem(${id})" title="Remove">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>` : '<div style="width:28px"></div>'}
+        </div>
+
+        <div class="item-card-body">
+            <div class="field-row-3">
+                <div class="field-group">
+                    <label>Length (m)</label>
+                    <input type="number" placeholder="0.00" data-field="length">
+                </div>
+                <div class="field-group">
+                    <label>Width (m)</label>
+                    <input type="number" placeholder="0.00" data-field="width">
+                </div>
+                <div class="field-group">
+                    <label>Qty</label>
+                    <input type="number" placeholder="1" data-field="quantity">
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field-group">
+                    <label>Thickness (mm)</label>
+                    <input type="number" placeholder="0" data-field="thickness">
+                </div>
+                <div class="field-group">
+                    <label>Material</label>
+                    <select data-field="material" class="styled-select">
+                        ${MATERIALS.map(m => `<option>${m}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+
+            <div class="field-group full">
+                <label>Shape / Profile</label>
+                <div class="chip-group" data-chipgroup="shape-${id}">
+                    ${SHAPES.map((s, i) => `<button class="chip ${i===0?'active':''}" data-value="${s}" onclick="selectChip(this, 'shape-${id}')">${s}</button>`).join('')}
+                </div>
+                <select data-field="shape" class="hidden-select" id="shape-${id}">
+                    ${SHAPES.map(s => `<option>${s}</option>`).join('')}
+                </select>
+            </div>
+        </div>
+    `;
+
+    list.appendChild(card);
+    updateItemCount();
+
+    // Animate in
+    requestAnimationFrame(() => card.classList.add("visible"));
+}
+
+// ── REMOVE ITEM ───────────────────────────────────────
+function removeItem(id) {
+    const card = document.getElementById(`item-${id}`);
+    if (card) {
+        card.classList.add("removing");
+        setTimeout(() => { card.remove(); updateItemCount(); }, 250);
+    }
+}
+
+// ── CHIP SELECT ───────────────────────────────────────
+function selectChip(btn, groupId) {
+    const group = document.querySelector(`[data-chipgroup="${groupId}"]`);
+    group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(groupId).value = btn.dataset.value;
+}
+
+// ── COUNT UPDATE ──────────────────────────────────────
+function updateItemCount() {
+    const count = document.getElementById("metalItemsList").children.length;
+    document.getElementById("itemCount").textContent = `${count} item${count !== 1 ? 's' : ''}`;
+}
+
+// ── COLLECT DATA ──────────────────────────────────────
+function collectItems() {
+    const cards = document.querySelectorAll(".metal-item-card");
+    return Array.from(cards).map((card, i) => ({
+        name:      `Item ${String(i+1).padStart(2,'0')}`,
+        length:    parseFloat(card.querySelector('[data-field="length"]').value) || 0,
+        width:     parseFloat(card.querySelector('[data-field="width"]').value) || 0,
+        quantity:  parseInt(card.querySelector('[data-field="quantity"]').value) || 1,
+        thickness: parseFloat(card.querySelector('[data-field="thickness"]').value) || 0,
+        material:  card.querySelector('[data-field="material"]').value,
+        shape:     card.querySelector('[data-field="shape"]').value,
+    }));
+}
+
+// ── GENERATE ──────────────────────────────────────────
+async function generateFullPlan() {
+    const items = collectItems();
+    const description = document.getElementById("description").value;
+
+    document.getElementById("emptyState").classList.add("hidden");
+    document.getElementById("resultsContent").classList.add("hidden");
+    document.getElementById("loader").classList.remove("hidden");
 
     try {
         const response = await fetch("/generate", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ description, items })
         });
 
         const result = await response.json();
 
-        // 🔥 UPDATE UI WITH REAL DATA
-        document.getElementById("time").innerText = result.time;
+        // Grand totals
+        document.getElementById("grandTotal").textContent = "R " + result.grand_total.toFixed(2);
+        document.getElementById("totalTime").textContent  = result.total_time;
+        document.getElementById("totalItems").textContent = items.length + " item" + (items.length !== 1 ? "s" : "");
 
-        document.getElementById("materialNeeded").innerText =
-            "Material: " + result.material_needed.toFixed(2) + " m";
+        // Per-item cards
+        const itemResults = document.getElementById("itemResults");
+        itemResults.innerHTML = "";
+        result.items.forEach((item, i) => {
+            const el = document.createElement("div");
+            el.className = "item-result-card";
+            el.style.animationDelay = `${i * 0.07}s`;
+            el.innerHTML = `
+                <div class="irc-header">
+                    <div class="irc-badge">${String(i+1).padStart(2,'0')}</div>
+                    <div class="irc-name">${item.name}</div>
+                    <div class="irc-total">R ${item.total_cost.toFixed(2)}</div>
+                </div>
+                <div class="irc-stats">
+                    <div class="irc-stat"><span>Material</span><strong>${item.material} · ${item.shape}</strong></div>
+                    <div class="irc-stat"><span>Needed</span><strong>${item.material_needed.toFixed(2)} m</strong></div>
+                    <div class="irc-stat"><span>Price/m</span><strong>R ${item.price_per_meter.toFixed(2)}</strong></div>
+                    <div class="irc-stat"><span>Time</span><strong>${item.time}</strong></div>
+                </div>
+            `;
+            itemResults.appendChild(el);
+            requestAnimationFrame(() => el.classList.add("visible"));
+        });
 
-        document.getElementById("priceMeter").innerText =
-            "Price/m: R " + result.price_per_meter.toFixed(2);
-
-        document.getElementById("totalCost").innerText =
-            "Total: R " + result.total_cost.toFixed(2);
-
-        fillList("steps", result.steps);
-        fillList("safety", result.safety);
+        // Lists
+        fillList("steps",        result.steps, true);
+        fillList("safety",       result.safety);
         fillList("alternatives", result.alternatives);
 
-    } catch (error) {
-        console.error("ERROR:", error);
+        document.getElementById("loader").classList.add("hidden");
+        document.getElementById("resultsContent").classList.remove("hidden");
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("loader").classList.add("hidden");
+        document.getElementById("emptyState").classList.remove("hidden");
         alert("Something went wrong. Check Flask server.");
     }
 }
 
-function fillList(id, items) {
+// ── FILL LIST ─────────────────────────────────────────
+function fillList(id, items, ordered = false) {
     const ul = document.getElementById(id);
     ul.innerHTML = "";
-
-    if (!items || items.length === 0) {
-        ul.innerHTML = "<li>No data</li>";
-        return;
-    }
-
-    items.forEach(item => {
+    if (!items || !items.length) { ul.innerHTML = "<li>No data available</li>"; return; }
+    items.forEach((item, i) => {
         const li = document.createElement("li");
-        li.textContent = item;
+        if (ordered) {
+            li.innerHTML = `<span class="step-num">${String(i+1).padStart(2,'0')}</span><span>${item}</span>`;
+        } else {
+            li.textContent = item;
+        }
         ul.appendChild(li);
     });
 }
