@@ -1,0 +1,22 @@
+[2026-05-09 16:31:52] INFO     | app        | ============================================================
+[2026-05-09 16:31:52] INFO     | app        | Shisela Nathi Lab — Logger initialised
+[2026-05-09 16:31:52] INFO     | app        | ============================================================
+[2026-05-09 16:32:03] INFO     | app        | Database initialised — users.db ready
+[2026-05-09 16:32:03] INFO     | app        | Blueprints registered: auth, main
+[2026-05-09 16:32:03] INFO     | app        | Starting Flask development server on port 5000...
+[2026-05-09 16:32:04] INFO     | app        | ============================================================
+[2026-05-09 16:32:04] INFO     | app        | Shisela Nathi Lab — Logger initialised
+[2026-05-09 16:32:04] INFO     | app        | ============================================================
+[2026-05-09 16:32:10] INFO     | app        | Database initialised — users.db ready
+[2026-05-09 16:32:10] INFO     | app        | Blueprints registered: auth, main
+[2026-05-09 16:32:10] INFO     | app        | Starting Flask development server on port 5000...
+[2026-05-09 16:32:31] INFO     | app        | UNAUTHENTICATED ACCESS | path=/ | ip=127.0.0.1
+[2026-05-09 16:32:31] INFO     | app        | GET / | status=302 | user=anonymous | ip=127.0.0.1
+[2026-05-09 16:32:31] INFO     | app        | GET /auth/login-page | status=200 | user=anonymous | ip=127.0.0.1
+[2026-05-09 16:32:33] INFO     | app        | UNAUTHENTICATED ACCESS | path=/favicon.ico | ip=127.0.0.1
+[2026-05-09 16:32:33] INFO     | app        | GET /favicon.ico | status=302 | user=anonymous | ip=127.0.0.1
+[2026-05-09 16:32:33] INFO     | app        | GET /auth/login-page | status=200 | user=anonymous | ip=127.0.0.1
+[2026-05-09 16:38:16] INFO     | app        | POST /auth/login | status=200 | user=Emmanxy | ip=127.0.0.1
+[2026-05-09 16:38:17] INFO     | app        | GET / | status=200 | user=Emmanxy | ip=127.0.0.1
+[2026-05-09 16:38:17] WARNING  | app        | 404 NOT FOUND | path=/favicon.ico | ip=127.0.0.1
+[2026-05-09 16:38:17] INFO     | app        | GET /favicon.ico | status=404 | user=Emmanxy | ip=127.0.0.1

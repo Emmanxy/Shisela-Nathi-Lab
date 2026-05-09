@@ -1,0 +1,2 @@
+[2026-05-09 16:38:16] INFO     | auth       | LOGIN ATTEMPT | email=takiecbu6@gmail.com | ip=127.0.0.1
+[2026-05-09 16:38:16] INFO     | auth       | LOGIN SUCCESS | user_id=1 | username=Emmanxy | ip=127.0.0.1
