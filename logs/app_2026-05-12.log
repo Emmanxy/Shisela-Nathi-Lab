@@ -1,0 +1,18 @@
+[2026-05-12 09:58:24] INFO     | app        | ============================================================
+[2026-05-12 09:58:24] INFO     | app        | Shisela Nathi Lab — Logger initialised
+[2026-05-12 09:58:24] INFO     | app        | ============================================================
+[2026-05-12 09:58:39] INFO     | app        | Database initialised — users.db ready
+[2026-05-12 09:58:39] INFO     | app        | Blueprints registered: auth, main
+[2026-05-12 09:58:39] INFO     | app        | Starting Flask development server on port 5000...
+[2026-05-12 09:58:41] INFO     | app        | ============================================================
+[2026-05-12 09:58:41] INFO     | app        | Shisela Nathi Lab — Logger initialised
+[2026-05-12 09:58:41] INFO     | app        | ============================================================
+[2026-05-12 09:58:46] INFO     | app        | Database initialised — users.db ready
+[2026-05-12 09:58:46] INFO     | app        | Blueprints registered: auth, main
+[2026-05-12 09:58:46] INFO     | app        | Starting Flask development server on port 5000...
+[2026-05-12 09:59:08] INFO     | app        | UNAUTHENTICATED ACCESS | path=/ | ip=10.11.66.167
+[2026-05-12 09:59:08] INFO     | app        | GET / | status=302 | user=anonymous | ip=10.11.66.167
+[2026-05-12 09:59:08] INFO     | app        | GET /auth/login-page | status=200 | user=anonymous | ip=10.11.66.167
+[2026-05-12 09:59:10] INFO     | app        | UNAUTHENTICATED ACCESS | path=/favicon.ico | ip=10.11.66.167
+[2026-05-12 09:59:10] INFO     | app        | GET /favicon.ico | status=302 | user=anonymous | ip=10.11.66.167
+[2026-05-12 09:59:11] INFO     | app        | GET /auth/login-page | status=200 | user=anonymous | ip=10.11.66.167
